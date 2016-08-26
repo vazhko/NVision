@@ -382,9 +382,9 @@
               <FilePath>.\lib\EZUSB.LIB</FilePath>
             </File>
             <File>
-              <FileName>USBJmpTb.OBJ</FileName>
+              <FileName>USBJmpTb.OBJECT</FileName>
               <FileType>3</FileType>
-              <FilePath>.\lib\USBJmpTb.OBJ</FilePath>
+              <FilePath>.\lib\USBJmpTb.OBJECT</FilePath>
             </File>
           </Files>
         </Group>

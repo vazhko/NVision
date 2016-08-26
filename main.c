@@ -41,12 +41,6 @@ extern const char xdata FlowStates[36];
 #define  CLRBIT(var, b)    	((var) &= ~(1 << (b)))
 
 
-// my
-BOOL scan_en = FALSE; // flag to enable autochange channels
-BYTE current_ch = 0;
-WORD d_ch_en = 0xffff; // активность каналов
-
-
 //-----------------------------------------------------------------------------
 // Task Dispatcher hooks
 //   The following hooks are called by the task dispatcher.
@@ -70,7 +64,6 @@ void TD_Init(void) { // Called once at startup
     SYNCDELAY;
     EP8CFG = 0x00; // EP8 not valid
     SYNCDELAY;
-
 
     FIFORESET = 0x80; // set NAKALL bit to NAK all transfers from host
     SYNCDELAY;
@@ -96,8 +89,7 @@ void TD_Init(void) { // Called once at startup
     EP6GPIFFLGSEL = 0x02; // For EP6IN, GPIF uses FF flag
     SYNCDELAY;
 
-    // global flowstate register initializations
-
+    // global flowstate register initializations   
     FLOWLOGIC = FlowStates[19]; // 0011 0110b - LFUNC[1:0] = 00 (A AND B), TERMA/B[2:0]=110 (FIFO Flag)
     SYNCDELAY;
     FLOWSTB = FlowStates[23]; // 0000 0100b - MSTB[2:0] = 100 (CTL4), not used as strobe
@@ -110,48 +102,27 @@ void TD_Init(void) { // Called once at startup
     SYNCDELAY;
 
 
-    // Инициализирую порты
-    // Канал
+    // Ports   
     CLRBIT(IFCONFIG, 2);
     PORTECFG = 0x10;
-    OEE = 0x00;
-    IOE = 0x00;
+    //OEE = 0x00;
+    //IOE = 0x00;
 
-
-    PORTACFG = 0x00;
-    OEA = 0xff;
-    IOA = 0;
-
+	// Port A
+    PORTACFG = 0x00;	
+    //OEA = 0xff;
+    IOA = 0x00; 
 
 
     spi_soft_init();
-    spi_init();
-
-    uart_init();
-
-
-
-
-
-}
-
-/*************************************************************************************************/
-void set_channel(BYTE ch) {
-
-    //static BYTE d_count;
-
-    IOA &= 0x0f;
-    IOA |= ((ch << 4) & 0xf0);
-
+    SPI1_init();
+    UART0_init();
 
 }
 
 
-
-
 /*************************************************************************************************/
-void TD_Poll(void) {
-    //    static WORD d_count;
+void TD_Poll(void) {  
 
 
     if(in_enable) {                           // if IN transfers are enabled
@@ -159,25 +130,7 @@ void TD_Poll(void) {
             if(EXTFIFONOTEMPTY) {                 // if external FIFO is not empty
                 if(!(EP68FIFOFLGS & 0x01)) {        // if EP6 FIFO is not full
 
-
-                    if(scan_en == TRUE) {
-
-
-                        while(!TESTBIT(d_ch_en, current_ch)) {
-                            current_ch++;
-                            current_ch &= 0x0f;
-                        }
-
-                        IOA &= 0x0f;
-                        IOA |= ((current_ch << 4) & 0xF0);
-
-                        current_ch ++;
-                        current_ch &= 0x0f;
-
-                    }
-
-
-
+ 
                     if(enum_high_speed) {
                         SYNCDELAY;
                         GPIFTCB1 = 0x01;                // setup transaction count (512 bytes/2 for word wide -> 0x0100)
@@ -260,11 +213,6 @@ BOOL DR_SetConfiguration(void) { // Called when a Set Configuration command is r
     Configuration = SETUPDAT[2];
 
 
-    // Автоматическое включение питания для внешних устройств
-    SETBIT(IOE, 5);
-    // Автоматическое включение   генератора
-    CLRBIT(IOA, 0);
-
     return (TRUE); // Handled by user code
 }
 
@@ -309,77 +257,30 @@ BOOL DR_SetFeature(void) {
 
 
 /*************************************************************************************************/
-#define VX_B0 0xB0 //  активность каналов
-#define VX_B1 0xB1 //  Echo/  reserv
-#define VX_B2 0xB2 //  power
+//#define VX_B0 0xB0 //  channel activity
+//#define VX_B1 0xB1 //  Echo/  reserv
+//#define VX_B2 0xB2 //  reserv
 #define VX_B3 0xB3 // enable IN transfers
-#define VX_B4 0xB4 //  вкл сканирование каналов
-#define VX_B5 0xB5 //  Установка активного канала
-#define VX_B6 0xB6 //  Установка коэфф усиления
-#define VX_B7 0xB7 //  //Установка / сброс бита разрешения тактового генератора  
-#define VX_B8 0xB8 // 	 DAC1
-#define VX_B9 0xB9 //	 DAC2
-#define VX_B10 0xBA //	 DAC3
-#define VX_B11 0xBB //	 DAC4
+//#define VX_B4 0xB4 //  
+//#define VX_B5 0xB5 //  
+//#define VX_B6 0xB6 //  
+//#define VX_B7 0xB7 //
+//#define VX_B8 0xB8 //DAC1
+//#define VX_B9 0xB9 //DAC2
+//#define VX_B10 0xBA //DAC3
+//#define VX_B11 0xBB //DAC4
 #define VX_BC 0xBC //	 DAC
-#define VX_BD 0xBD //	 UART
-#define VX_BE 0xBD //	 Registers in Altera
+#define VX_BD 0xBD //	 to Altera by UART
+
+#define VX_BE 0xBE //	 Registers wr in Altera for diagrams
+#define VX_BF 0xBF //	 Registers rd in Altera for diagrams
+
 /*************************************************************************************************/
-BOOL DR_VendorCmnd(void) {
-    WORD dac_data;
-    WORD dac_num;
+BOOL DR_VendorCmnd(void) {	 
 
-    switch(SETUPDAT[1]) {  // активность каналов при сканировании
-        case VX_B0:
+    switch(SETUPDAT[1]) {  
 
-            d_ch_en = (SETUPDAT[2] << 8) | SETUPDAT[3];
-            if(d_ch_en == 0) d_ch_en = 1;
-
-
-            EP0BUF[0] = VX_B0;
-            SYNCDELAY;
-            EP0BUF[1] = SETUPDAT[2];
-            SYNCDELAY;
-            EP0BUF[2] = SETUPDAT[3];
-            SYNCDELAY;
-            EP0BCH = 0;
-            EP0BCL = 3;
-            EP0CS |= bmHSNAK;
-            break;
-
-        case VX_B1:
-
-            *EP0BUF = VX_B1;
-            EP0BCH = 0;
-            EP0BCL = 1;
-            EP0CS |= bmHSNAK;
-            break;
-
-            //Включение питания для внешних устройств
-        case VX_B2:
-
-            if(SETUPDAT[2] == 1) {
-                SETBIT(OEE, 5);
-                SYNCDELAY;
-                SETBIT(IOE, 5);
-                SYNCDELAY;
-
-            } else {
-                CLRBIT(IOE, 5);
-                SYNCDELAY;
-            }
-
-            EP0BUF[0] = VX_B2;
-            EP0BUF[1] = SETUPDAT[2];
-
-            EP0BCH = 0;
-            EP0BCL = 2; // Arm endpoint with # bytes to transfer
-            EP0CS |= bmHSNAK; // Acknowledge handshake phase of device request
-            break;
-
-
-        case VX_B3: // enable / disable IN transfers
-
+        case VX_B3: // enable / disable IN transfers 
 
             if(SETUPDAT[2] == 1) {
                 in_enable = TRUE;
@@ -393,115 +294,11 @@ BOOL DR_VendorCmnd(void) {
             EP0BCH = 0;
             EP0BCL = 2;
             EP0CS |= bmHSNAK;
-            break;
-
-        case VX_B4: // вкл сканирование каналов
-
-            if(SETUPDAT[2] == 1) {
-                scan_en = TRUE;
-            } else {
-                scan_en = FALSE;
-            }
-
-            current_ch = 0;
-
-            *EP0BUF = VX_B4;
-            EP0BUF[1] = SETUPDAT[2];
-            SYNCDELAY;
-            EP0BCH = 0;
-            EP0BCL = 2;
-            EP0CS |= bmHSNAK;
-
-            break;
-
-
-        case VX_B5: // Установка активного канала
-
-            EP0BUF[0] = VX_B5;
-            SYNCDELAY;
-            EP0BUF[1] = SETUPDAT[2];
-            SYNCDELAY;
-
-            set_channel(SETUPDAT[2]);
-
-            EP0BCH = 0;
-            EP0BCL = 2;
-            EP0CS |= bmHSNAK;
-            break;
-
-        case VX_B6: // Установка коэфф усиления
-
-            EP0BUF[0] = VX_B6;
-            SYNCDELAY;
-            EP0BUF[1] = SETUPDAT[2];
-            SYNCDELAY;
-
-
-            IOE &= 0xf0;
-            IOE |= (SETUPDAT[2] & 0x0f);
-
-
-            EP0BCH = 0;
-            EP0BCL = 2;
-            EP0CS |= bmHSNAK;
-            break;
-
-
-        case VX_B7: //Установка / сброс бита разрешения тактового генератора
-
-            EP0BUF[0] = VX_B7;
-            SYNCDELAY;
-            if(SETUPDAT[2] == 1) CLRBIT(IOA, 0);
-            else SETBIT(IOA, 0);
-
-            EP0BUF[1] = SETUPDAT[2];
-            SYNCDELAY;
-            EP0BCH = 0;
-            EP0BCL = 2;
-            EP0CS |= bmHSNAK;
-
-            break;
-
-        case VX_B8: // Комманда установки ЦАП 1
-        case VX_B9: // Комманда установки ЦАП 2
-        case VX_B10: // Комманда установки ЦАП 3
-        case VX_B11: // Комманда установки ЦАП 4
-
-            dac_data = SETUPDAT[2] | (SETUPDAT[3] << 8);
-            dac_data &=  0x7fff;
-
-            switch(SETUPDAT[1]) {
-                case VX_B8:
-                    dac_num = 0x0000;
-                    break;
-                case VX_B9:
-                    dac_num = 0x1000;
-                    break;
-                case VX_B10:
-                    dac_num = 0x2000;
-                    break;
-                case VX_B11:
-                    dac_num = 0x3000;
-                    break;
-            }
-
-
-            AD5624_write(dac_num | dac_data);
-
-
-            EP0BUF[0] = SETUPDAT[1];
-            SYNCDELAY;
-            EP0BUF[1] = SETUPDAT[2];
-            SYNCDELAY;
-            EP0BUF[2] = SETUPDAT[3];
-            SYNCDELAY;
-            EP0BCH = 0;
-            EP0BCL = 3;
-            EP0CS |= bmHSNAK;
-            break;
+            break;	
+	
 
         case VX_BC:
-            SPIWriteDAC(SETUPDAT[3], SETUPDAT[2]);
+            SPI1_WriteDAC(SETUPDAT[3], SETUPDAT[2]);
             EP0BUF[0] = SETUPDAT[3];
             SYNCDELAY;
             EP0BUF[1] = SETUPDAT[2];
@@ -513,8 +310,8 @@ BOOL DR_VendorCmnd(void) {
             break;
 
         case VX_BD:
-            uart_putc(SETUPDAT[3]);
-            uart_putc(SETUPDAT[2]);
+            UART0_putc(SETUPDAT[3]);
+            UART0_putc(SETUPDAT[2]);
 
             EP0BUF[0] = SETUPDAT[3];
             SYNCDELAY;
@@ -525,6 +322,40 @@ BOOL DR_VendorCmnd(void) {
             EP0BCL = 2;
             EP0CS |= bmHSNAK;
             break;
+
+        case VX_BE:
+
+            EP0BUF[0] = SETUPDAT[3];	  //h adr
+            SYNCDELAY;
+            EP0BUF[1] = SETUPDAT[2];	  //l adr
+            SYNCDELAY;
+			EP0BUF[2] = SETUPDAT[4];	 // value
+
+			shape_reg_write(SETUPDAT[3], SETUPDAT[2], SETUPDAT[4]);
+
+            EP0BCH = 0;
+            EP0BCL = 3;
+            EP0CS |= bmHSNAK;
+            break;
+
+        case VX_BF:
+
+            EP0BUF[0] = SETUPDAT[3];	  //h adr
+            SYNCDELAY;
+            EP0BUF[1] = SETUPDAT[2];	  //l adr
+            SYNCDELAY;
+			//EP0BUF[2] = SETUPDAT[4];	 // count
+			//shape_reg_read(SETUPDAT[3], SETUPDAT[2], SETUPDAT[4]);
+			EP0BUF[2] = shape_reg_read(SETUPDAT[3], SETUPDAT[2]);
+			//EP0BUF[0] = spi_soft_read_write(SETUPDAT[3]);
+		   	//EP0BUF[1] = spi_soft_read_write(SETUPDAT[2]);
+			//EP0BUF[2] = 0;
+            EP0BCH = 0;
+            EP0BCL = 3;
+            EP0CS |= bmHSNAK;
+            break;
+
+
         default:
             return (TRUE);
     }
