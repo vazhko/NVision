@@ -140,4 +140,3 @@ void UART0_putc(BYTE b)	{
     TI = FALSE;
     SBUF0 = b;
 }
-
