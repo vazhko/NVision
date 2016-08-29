@@ -7,7 +7,7 @@
 #define SCLK	2 //PA2
 #define SDAT_O	3 //PA3
 #define SDAT_I	4 //PA4 
-#define LOAD	6 //PA6
+#define LOAD	5 //PA6
 
 #define SPI_PORT	IOA	
 #define SPI_SOFT_DELAY 1

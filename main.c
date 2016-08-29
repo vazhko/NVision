@@ -344,12 +344,9 @@ BOOL DR_VendorCmnd(void) {
             SYNCDELAY;
             EP0BUF[1] = SETUPDAT[2];	  //l adr
             SYNCDELAY;
-			//EP0BUF[2] = SETUPDAT[4];	 // count
-			//shape_reg_read(SETUPDAT[3], SETUPDAT[2], SETUPDAT[4]);
+
 			EP0BUF[2] = shape_reg_read(SETUPDAT[3], SETUPDAT[2]);
-			//EP0BUF[0] = spi_soft_read_write(SETUPDAT[3]);
-		   	//EP0BUF[1] = spi_soft_read_write(SETUPDAT[2]);
-			//EP0BUF[2] = 0;
+
             EP0BCH = 0;
             EP0BCL = 3;
             EP0CS |= bmHSNAK;
