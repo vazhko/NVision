@@ -2,13 +2,6 @@
 #include "fx2sdly.h" 
 #include "fx2regs.h"
 
-/******************************************************************************/
-/*
-static void spi_soft_delay(void){
-	char delay;
-	for(delay=0; delay < SPI_SOFT_DELAY; delay++) ;;
-}
-*/
 
 /******************************************************************************/
 BYTE byte_mirror(BYTE c) {
@@ -73,8 +66,7 @@ void shape_reg_write(BYTE adr_h, BYTE adr_l, BYTE value) {
     SETBIT(SPI_PORT, LOAD);
 	SYNCDELAY;
 	CLRBIT(SPI_PORT, LOAD);
-	//EP0BUF[3] = spi_soft_read_write(0xaa);
-	//EP0BUF[4] = spi_soft_read_write(0);
+
 }
 
 /******************************************************************************/
