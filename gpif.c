@@ -8,48 +8,48 @@
 // CTL Out Tristate-able Binary       
 // SingleWrite WF Select     1     
 // SingleRead WF Select      0     
-// FifoWrite WF Select       0     
+// FifoWrite WF Select       3     
 // FifoRead WF Select        2     
 // Data Bus Idle Drive   Tristate     
 // END DO NOT EDIT                  
                                     
 // DO NOT EDIT ...       
 // GPIF Wave Names       
-// Wave 0   = unused       
-// Wave 1   = unused       
-// Wave 2   = FIFORd       
-// Wave 3   = FIFOWr       
+// Wave 0   = Single R     
+// Wave 1   = Single W     
+// Wave 2   = Чтение п     
+// Wave 3   = Запись п     
                          
 // GPIF Ctrl Outputs   Level   
-// CTL 0    = WEN#     CMOS        
-// CTL 1    = REN#     CMOS        
-// CTL 2    = OE#      CMOS        
-// CTL 3    = unused   CMOS        
-// CTL 4    = unused   CMOS        
-// CTL 5    = unused   CMOS        
+// CTL 0    = RE       CMOS        
+// CTL 1    = Ctl-NoOp CMOS        
+// CTL 2    = Ctl-NoOp CMOS        
+// CTL 3    = TST3     CMOS        
+// CTL 4    = TST4     CMOS        
+// CTL 5    = TST5     CMOS        
                                
 // GPIF Rdy Inputs         
-// RDY0     = EF#            
-// RDY1     = FF#            
-// RDY2     = unused         
-// RDY3     = unused         
-// RDY4     = unused         
+// RDY0     = EF             
+// RDY1     = RDY1           
+// RDY2     = RDY2           
+// RDY3     = RDY3           
+// RDY4     = RDY4           
 // RDY5     = TCXpire        
 // FIFOFlag = FIFOFlag       
 // IntReady = IntReady       
 // END DO NOT EDIT         
 // DO NOT EDIT ...                                                                         
 //                                                                                         
-// GPIF Waveform 0: unused                                                                  
+// GPIF Waveform 0: Single R                                                                
 //                                                                                         
 // Interval     0         1         2         3         4         5         6     Idle (7) 
 //          _________ _________ _________ _________ _________ _________ _________ _________
 //                                                                                         
 // AddrMode Same Val  Same Val  Same Val  Same Val  Same Val  Same Val  Same Val           
-// DataMode NO Data   NO Data   NO Data   NO Data   NO Data   NO Data   NO Data            
+// DataMode NO Data   Activate  NO Data   NO Data   NO Data   NO Data   NO Data            
 // NextData SameData  SameData  SameData  SameData  SameData  SameData  SameData           
 // Int Trig No Int    No Int    No Int    No Int    No Int    No Int    No Int             
-// IF/Wait  Wait 1    Wait 1    Wait 1    Wait 1    Wait 1    Wait 1    Wait 1             
+// IF/Wait  Wait 2    Wait 2    Wait 2    Wait 1    Wait 1    Wait 1    Wait 1             
 //   Term A                                                                                
 //   LFunc                                                                                 
 //   Term B                                                                                
@@ -57,26 +57,26 @@
 // Branch0                                                                                 
 // Re-Exec                                                                                 
 // Sngl/CRC Default   Default   Default   Default   Default   Default   Default            
-// WEN#         0         0         0         0         0         0         0         0    
-// REN#         1         1         1         1         1         1         1         1    
-// OE#          0         0         0         0         0         0         0         0    
-// unused       0         0         0         0         0         0         0         0    
-// unused       0         0         0         0         0         0         0         0    
-// unused       0         0         0         0         0         0         0         0    
+// RE           0         0         0         0         0         0         0         1    
+// Ctl-NoOp     0         0         0         0         0         0         0         0    
+// Ctl-NoOp     0         0         0         0         0         0         0         0    
+// TST3         0         0         0         0         0         0         0         0    
+// TST4         0         0         0         0         0         0         0         0    
+// TST5         0         0         0         0         0         0         0         0    
 //                     
 // END DO NOT EDIT     
 // DO NOT EDIT ...                                                                         
 //                                                                                         
-// GPIF Waveform 1: unused                                                                  
+// GPIF Waveform 1: Single W                                                                
 //                                                                                         
 // Interval     0         1         2         3         4         5         6     Idle (7) 
 //          _________ _________ _________ _________ _________ _________ _________ _________
 //                                                                                         
 // AddrMode Same Val  Same Val  Same Val  Same Val  Same Val  Same Val  Same Val           
-// DataMode NO Data   NO Data   NO Data   NO Data   NO Data   NO Data   NO Data            
+// DataMode Activate  Activate  Activate  Activate  Activate  Activate  Activate           
 // NextData SameData  SameData  SameData  SameData  SameData  SameData  SameData           
 // Int Trig No Int    No Int    No Int    No Int    No Int    No Int    No Int             
-// IF/Wait  Wait 1    Wait 1    Wait 1    Wait 1    Wait 1    Wait 1    Wait 1             
+// IF/Wait  Wait 2    Wait 2    Wait 2    Wait 1    Wait 1    Wait 1    Wait 1             
 //   Term A                                                                                
 //   LFunc                                                                                 
 //   Term B                                                                                
@@ -84,66 +84,66 @@
 // Branch0                                                                                 
 // Re-Exec                                                                                 
 // Sngl/CRC Default   Default   Default   Default   Default   Default   Default            
-// WEN#         0         0         0         0         0         0         0         0    
-// REN#         1         1         1         1         1         1         1         1    
-// OE#          0         0         0         0         0         0         0         0    
-// unused       0         0         0         0         0         0         0         0    
-// unused       0         0         0         0         0         0         0         0    
-// unused       0         0         0         0         0         0         0         0    
+// RE           1         1         1         1         1         1         1         1    
+// Ctl-NoOp     0         0         0         0         0         0         0         0    
+// Ctl-NoOp     0         0         0         0         0         0         0         0    
+// TST3         0         0         0         0         0         0         0         0    
+// TST4         0         0         0         0         0         0         0         0    
+// TST5         0         0         0         0         0         0         0         0    
 //                     
 // END DO NOT EDIT     
 // DO NOT EDIT ...                                                                         
 //                                                                                         
-// GPIF Waveform 2: FIFORd                                                                  
+// GPIF Waveform 2: Чтение п                                                                
 //                                                                                         
 // Interval     0         1         2         3         4         5         6     Idle (7) 
 //          _________ _________ _________ _________ _________ _________ _________ _________
 //                                                                                         
 // AddrMode Same Val  Same Val  Same Val  Same Val  Same Val  Same Val  Same Val           
-// DataMode NO Data   NO Data   Activate  NO Data   NO Data   NO Data   NO Data            
+// DataMode NO Data   NO Data   NO Data   Activate  NO Data   NO Data   NO Data            
 // NextData SameData  SameData  SameData  SameData  SameData  SameData  SameData           
 // Int Trig No Int    No Int    No Int    No Int    No Int    No Int    No Int             
-// IF/Wait  Wait 1    Wait 1    Wait 1    Wait 1    IF        Wait 1    Wait 1             
-//   Term A                                         TCXpire                                
-//   LFunc                                          OR                                     
-//   Term B                                         EF#                                    
-// Branch1                                          ThenIdle                               
-// Branch0                                          Else 3                                 
-// Re-Exec                                          No                                     
+// IF/Wait  Wait 1    Wait 1    Wait 1    Wait 1    Wait 1    IF        Wait 1             
+//   Term A                                                   TCXpire                      
+//   LFunc                                                    OR                           
+//   Term B                                                   EF                           
+// Branch1                                                    ThenIdle                     
+// Branch0                                                    Else 0                       
+// Re-Exec                                                    No                           
 // Sngl/CRC Default   Default   Default   Default   Default   Default   Default            
-// WEN#         0         0         0         0         0         0         0         0    
-// REN#         1         0         0         1         1         1         1         1    
-// OE#          0         0         0         0         0         0         0         0    
-// unused       0         0         0         0         0         0         0         0    
-// unused       0         0         0         0         0         0         0         0    
-// unused       0         0         0         0         0         0         0         0    
+// RE           1         0         0         0         1         1         1         1    
+// Ctl-NoOp     0         0         0         0         0         0         0         0    
+// Ctl-NoOp     0         0         0         0         0         0         0         0    
+// TST3         0         0         0         0         0         0         0         0    
+// TST4         0         0         0         0         0         0         0         0    
+// TST5         0         0         0         0         0         0         0         0    
 //                     
 // END DO NOT EDIT     
 // DO NOT EDIT ...                                                                         
 //                                                                                         
-// GPIF Waveform 3: FIFOWr                                                                  
+// GPIF Waveform 3: Запись п                                                                
 //                                                                                         
 // Interval     0         1         2         3         4         5         6     Idle (7) 
 //          _________ _________ _________ _________ _________ _________ _________ _________
 //                                                                                         
 // AddrMode Same Val  Same Val  Same Val  Same Val  Same Val  Same Val  Same Val           
-// DataMode NO Data   Activate  Activate  Activate  Activate  Activate  Activate           
-// NextData SameData  SameData  SameData  SameData  SameData  SameData  SameData           
+// DataMode NO Data   Activate  Activate  Activate  NO Data   Activate  Activate           
+// NextData SameData  SameData  SameData  SameData  SameData  NextData  SameData           
 // Int Trig No Int    No Int    No Int    No Int    No Int    No Int    No Int             
-// IF/Wait  Wait 1    IF        Wait 1    Wait 1    Wait 1    Wait 1    Wait 1             
-//   Term A           TCXpire                                                              
-//   LFunc            AND                                                                  
-//   Term B           TCXpire                                                              
-// Branch1            ThenIdle                                                             
-// Branch0            Else 1                                                               
-// Re-Exec            No                                                                   
+// IF/Wait  Wait 2    Wait 1    Wait 2    Wait 1    Wait 2    IF        Wait 1             
+//   Term A                                                   FIFOFlag                     
+//   LFunc                                                    OR                           
+//   Term B                                                   TCXpire                      
+// Branch1                                                    ThenIdle                     
+// Branch0                                                    Else 0                       
+// Re-Exec                                                    No                           
 // Sngl/CRC Default   Default   Default   Default   Default   Default   Default            
-// WEN#         0         0         0         0         0         0         0         0    
-// REN#         1         1         1         1         1         1         1         1    
-// OE#          0         0         0         0         0         0         0         0    
-// unused       0         0         0         0         0         0         0         0    
-// unused       0         0         0         0         0         0         0         0    
-// unused       0         0         0         0         0         0         0         0    
+// RE           1         1         1         1         1         1         1         1    
+// Ctl-NoOp     0         0         0         0         0         0         0         0    
+// Ctl-NoOp     0         0         0         0         0         0         0         0    
+// TST3         0         0         0         0         0         0         0         0    
+// TST4         0         0         0         0         0         0         0         0    
+// TST5         0         0         0         0         0         0         0         0    
 //                     
 // END DO NOT EDIT     
                                               
@@ -159,25 +159,25 @@
 const char xdata WaveData[128] =     
 {                                      
 // Wave 0 
-/* LenBr */ 0x01,     0x01,     0x01,     0x01,     0x01,     0x01,     0x01,     0x07,
-/* Opcode*/ 0x00,     0x00,     0x00,     0x00,     0x00,     0x00,     0x00,     0x00,
-/* Output*/ 0x02,     0x02,     0x02,     0x02,     0x02,     0x02,     0x02,     0x02,
+/* LenBr */ 0x02,     0x02,     0x02,     0x01,     0x01,     0x01,     0x01,     0x07,
+/* Opcode*/ 0x00,     0x02,     0x00,     0x00,     0x00,     0x00,     0x00,     0x00,
+/* Output*/ 0x00,     0x00,     0x00,     0x00,     0x00,     0x00,     0x00,     0x01,
 /* LFun  */ 0x00,     0x00,     0x00,     0x00,     0x00,     0x00,     0x00,     0x3F,
 // Wave 1 
-/* LenBr */ 0x01,     0x01,     0x01,     0x01,     0x01,     0x01,     0x01,     0x07,
-/* Opcode*/ 0x00,     0x00,     0x00,     0x00,     0x00,     0x00,     0x00,     0x00,
-/* Output*/ 0x02,     0x02,     0x02,     0x02,     0x02,     0x02,     0x02,     0x02,
+/* LenBr */ 0x02,     0x02,     0x02,     0x01,     0x01,     0x01,     0x01,     0x07,
+/* Opcode*/ 0x02,     0x02,     0x02,     0x02,     0x02,     0x02,     0x02,     0x00,
+/* Output*/ 0x01,     0x01,     0x01,     0x01,     0x01,     0x01,     0x01,     0x01,
 /* LFun  */ 0x00,     0x00,     0x00,     0x00,     0x00,     0x00,     0x00,     0x3F,
 // Wave 2 
-/* LenBr */ 0x01,     0x01,     0x01,     0x01,     0x3B,     0x01,     0x01,     0x07,
-/* Opcode*/ 0x00,     0x00,     0x02,     0x00,     0x01,     0x00,     0x00,     0x00,
-/* Output*/ 0x02,     0x00,     0x00,     0x02,     0x02,     0x02,     0x02,     0x02,
-/* LFun  */ 0x00,     0x00,     0x00,     0x00,     0x68,     0x00,     0x00,     0x3F,
+/* LenBr */ 0x01,     0x01,     0x01,     0x01,     0x01,     0x38,     0x01,     0x07,
+/* Opcode*/ 0x00,     0x00,     0x00,     0x02,     0x00,     0x01,     0x00,     0x00,
+/* Output*/ 0x01,     0x00,     0x00,     0x00,     0x01,     0x01,     0x01,     0x01,
+/* LFun  */ 0x00,     0x00,     0x00,     0x00,     0x00,     0x68,     0x00,     0x3F,
 // Wave 3 
-/* LenBr */ 0x01,     0x39,     0x01,     0x01,     0x01,     0x01,     0x01,     0x07,
-/* Opcode*/ 0x00,     0x03,     0x02,     0x02,     0x02,     0x02,     0x02,     0x00,
-/* Output*/ 0x02,     0x02,     0x02,     0x02,     0x02,     0x02,     0x02,     0x02,
-/* LFun  */ 0x00,     0x2D,     0x00,     0x00,     0x00,     0x00,     0x00,     0x3F,
+/* LenBr */ 0x02,     0x01,     0x02,     0x01,     0x02,     0x38,     0x01,     0x07,
+/* Opcode*/ 0x00,     0x02,     0x02,     0x02,     0x00,     0x07,     0x02,     0x00,
+/* Output*/ 0x01,     0x01,     0x01,     0x01,     0x01,     0x01,     0x01,     0x01,
+/* LFun  */ 0x00,     0x00,     0x00,     0x00,     0x00,     0x75,     0x00,     0x3F,
 };                     
 // END DO NOT EDIT     
                        
@@ -187,14 +187,14 @@ const char xdata FlowStates[36] =
 /* Wave 0 FlowStates */ 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
 /* Wave 1 FlowStates */ 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
 /* Wave 2 FlowStates */ 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
-/* Wave 3 FlowStates */ 0x81,0x36,0x16,0x17,0x00,0x04,0x03,0x02,0x01,
+/* Wave 3 FlowStates */ 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
 };                     
 // END DO NOT EDIT     
                        
 // DO NOT EDIT ...                                               
 const char xdata InitData[7] =                                   
 {                                                                
-/* Regs  */ 0xE0,0x00,0x00,0x02,0xEE,0x42,0x00     
+/* Regs  */ 0xE0,0x00,0x00,0x01,0xEA,0x4E,0x00     
 };                                                               
 // END DO NOT EDIT                                               
                                                                  
@@ -224,7 +224,7 @@ void GpifInit( void )
   // 8051 doesn't have access to waveform memories 'til
   // the part is in GPIF mode.
  
-  IFCONFIG = 0xEE;
+  IFCONFIG = 0xEA;
   // IFCLKSRC=1   , FIFOs executes on internal clk source
   // xMHz=1       , 48MHz internal clk rate
   // IFCLKOE=0    , Don't drive IFCLK pin signal at 48MHz
