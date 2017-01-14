@@ -32,7 +32,7 @@ extern BOOL Selfpwr;
 
 BYTE Configuration; // Current configuration
 BYTE AlternateSetting; // Alternate settings
-BOOL in_enable = FALSE; // flag to enable IN transfers
+BOOL in_enable = TRUE; // flag to enable IN transfers
 BOOL enum_high_speed = FALSE; // flag to let firmware know FX2 enumerated at high speed
 extern const char xdata FlowStates[36];
 
