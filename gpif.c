@@ -15,10 +15,10 @@
                                     
 // DO NOT EDIT ...       
 // GPIF Wave Names       
-// Wave 0   = Single R     
-// Wave 1   = Single W     
+// Wave 0   = No           
+// Wave 1   = No           
 // Wave 2   = FIFO Rea     
-// Wave 3   = FIFO Wri     
+// Wave 3   = No           
                          
 // GPIF Ctrl Outputs   Level   
 // CTL 0    = RD       CMOS        
@@ -29,7 +29,7 @@
 // CTL 5    = CTL5     CMOS        
                                
 // GPIF Rdy Inputs         
-// RDY0     = ACK            
+// RDY0     = F              
 // RDY1     = RDY1           
 // RDY2     = RDY2           
 // RDY3     = RDY3           
@@ -40,7 +40,7 @@
 // END DO NOT EDIT         
 // DO NOT EDIT ...                                                                         
 //                                                                                         
-// GPIF Waveform 0: Single R                                                                
+// GPIF Waveform 0: No                                                                      
 //                                                                                         
 // Interval     0         1         2         3         4         5         6     Idle (7) 
 //          _________ _________ _________ _________ _________ _________ _________ _________
@@ -67,7 +67,7 @@
 // END DO NOT EDIT     
 // DO NOT EDIT ...                                                                         
 //                                                                                         
-// GPIF Waveform 1: Single W                                                                
+// GPIF Waveform 1: No                                                                      
 //                                                                                         
 // Interval     0         1         2         3         4         5         6     Idle (7) 
 //          _________ _________ _________ _________ _________ _________ _________ _________
@@ -100,18 +100,18 @@
 //          _________ _________ _________ _________ _________ _________ _________ _________
 //                                                                                         
 // AddrMode Same Val  Same Val  Same Val  Same Val  Same Val  Same Val  Same Val           
-// DataMode NO Data   NO Data   NO Data   Activate  Activate  Activate  Activate           
+// DataMode NO Data   Activate  Activate  Activate  Activate  Activate  Activate           
 // NextData SameData  SameData  SameData  SameData  SameData  SameData  SameData           
 // Int Trig No Int    No Int    No Int    No Int    No Int    No Int    No Int             
-// IF/Wait  Wait 1    Wait 1    Wait 1    IF        Wait 1    Wait 1    Wait 1             
-//   Term A                               TCXpire                                          
-//   LFunc                                AND                                              
-//   Term B                               TCXpire                                          
-// Branch1                                ThenIdle                                         
-// Branch0                                Else 0                                           
-// Re-Exec                                Yes                                              
+// IF/Wait  Wait 1    IF        Wait 1    Wait 1    Wait 1    Wait 1    Wait 1             
+//   Term A           F                                                                    
+//   LFunc            OR                                                                   
+//   Term B           TCXpire                                                              
+// Branch1            ThenIdle                                                             
+// Branch0            Else 0                                                               
+// Re-Exec            Yes                                                                  
 // Sngl/CRC Default   Default   Default   Default   Default   Default   Default            
-// RD           1         1         0         0         0         0         0         1    
+// RD           0         0         0         0         0         0         0         1    
 // TST2         0         0         0         0         0         0         0         0    
 // CTL2         0         0         0         0         0         0         0         0    
 // CTL3         0         0         0         0         0         0         0         0    
@@ -121,7 +121,7 @@
 // END DO NOT EDIT     
 // DO NOT EDIT ...                                                                         
 //                                                                                         
-// GPIF Waveform 3: FIFO Wri                                                                
+// GPIF Waveform 3: No                                                                      
 //                                                                                         
 // Interval     0         1         2         3         4         5         6     Idle (7) 
 //          _________ _________ _________ _________ _________ _________ _________ _________
@@ -169,10 +169,10 @@ const char xdata WaveData[128] =
 /* Output*/ 0x01,     0x01,     0x01,     0x01,     0x01,     0x01,     0x01,     0x01,
 /* LFun  */ 0x00,     0x00,     0x00,     0x00,     0x00,     0x00,     0x00,     0x3F,
 // Wave 2 
-/* LenBr */ 0x01,     0x01,     0x01,     0xB8,     0x01,     0x01,     0x01,     0x07,
-/* Opcode*/ 0x00,     0x00,     0x00,     0x03,     0x02,     0x02,     0x02,     0x00,
-/* Output*/ 0x01,     0x01,     0x00,     0x00,     0x00,     0x00,     0x00,     0x01,
-/* LFun  */ 0x00,     0x00,     0x00,     0x2D,     0x00,     0x00,     0x00,     0x3F,
+/* LenBr */ 0x01,     0xB8,     0x01,     0x01,     0x01,     0x01,     0x01,     0x07,
+/* Opcode*/ 0x00,     0x03,     0x02,     0x02,     0x02,     0x02,     0x02,     0x00,
+/* Output*/ 0x00,     0x00,     0x00,     0x00,     0x00,     0x00,     0x00,     0x01,
+/* LFun  */ 0x00,     0x45,     0x00,     0x00,     0x00,     0x00,     0x00,     0x3F,
 // Wave 3 
 /* LenBr */ 0x01,     0x01,     0x01,     0x01,     0x01,     0x01,     0x01,     0x07,
 /* Opcode*/ 0x00,     0x00,     0x00,     0x00,     0x00,     0x00,     0x00,     0x00,
